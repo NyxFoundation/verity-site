@@ -195,6 +195,20 @@
       margin-bottom: 2.5rem;
     }
 
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 200;
+      line-height: 1.1;
+      letter-spacing: 0.06em;
+      max-width: 800px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 .thin {
+      font-weight: 100;
+      opacity: 0.5;
+    }
+
     .hero-formula {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -791,11 +805,12 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .hero-badge, .hero-formula, .hero-buttons {
+    .hero-badge, .hero h1, .hero-formula, .hero-buttons {
       animation: fadeInUp 0.8s ease-out both;
     }
-    .hero-formula { animation-delay: 0.1s; }
-    .hero-buttons { animation-delay: 0.2s; }
+    .hero h1 { animation-delay: 0.1s; }
+    .hero-formula { animation-delay: 0.2s; }
+    .hero-buttons { animation-delay: 0.3s; }
   </style>
 </head>
 <body>
@@ -841,6 +856,7 @@
   <section class="hero">
     <canvas class="hero-smoke" id="smokeCanvas"></canvas>
     <div class="hero-badge">Ethereum Lean Consensus Client</div>
+    <h1>Consensus You Can <span class="thin">Mathematically</span> Trust</h1>
     <div class="hero-formula">
       <code>theorem state_transition_correct : ∀ s b, verify (transition s b) = true</code>
     </div>
