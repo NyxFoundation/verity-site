@@ -210,20 +210,24 @@
     }
 
     .hero-formula {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 1.5rem 2.5rem;
       margin-bottom: 3rem;
-      max-width: 800px;
     }
 
     .hero-formula code {
+      display: inline-block;
       font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-      font-size: clamp(1rem, 2.2vw, 1.35rem);
-      color: var(--fg-muted);
-      letter-spacing: 0.02em;
-      white-space: nowrap;
+      font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+      color: var(--fg-code-text);
+      letter-spacing: 0.05em;
+      padding: 1rem 2rem;
+      border: 1px solid var(--fg-ghost);
+      border-radius: 8px;
+      background: var(--fg-code);
+    }
+
+    .hero-formula code em {
+      font-style: normal;
+      color: var(--fg-code-em);
     }
 
     .hero-buttons {
@@ -277,30 +281,6 @@
     }
 
     /* ===== Proof banner ===== */
-    .proof-banner {
-      padding: 4rem 2rem;
-      text-align: center;
-      border-top: 1px solid var(--fg-subtle);
-      border-bottom: 1px solid var(--fg-subtle);
-    }
-
-    .proof-banner code {
-      display: inline-block;
-      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-      font-size: clamp(0.85rem, 1.5vw, 1.1rem);
-      color: var(--fg-code-text);
-      letter-spacing: 0.05em;
-      padding: 1rem 2rem;
-      border: 1px solid var(--fg-ghost);
-      border-radius: 8px;
-      background: var(--fg-code);
-    }
-
-    .proof-banner code em {
-      font-style: normal;
-      color: var(--fg-code-em);
-    }
-
     /* ===== Section shared ===== */
     section {
       padding: 6rem 2rem;
@@ -858,7 +838,7 @@
     <div class="hero-badge">Ethereum Lean Consensus Client</div>
     <h1>Consensus You Can <span class="thin">Mathematically</span> Trust</h1>
     <div class="hero-formula">
-      <code>theorem state_transition_correct : ∀ s b, verify (transition s b) = true</code>
+      <code><em>theorem</em> state_transition_correct : ∀ s b, <em>verify</em> (transition s b) = <em>true</em></code>
     </div>
     <div class="hero-buttons">
       <a href="#" class="btn btn-primary">
@@ -868,11 +848,6 @@
       <a href="#" class="btn btn-secondary">Read the Docs</a>
     </div>
   </section>
-
-  <!-- ===== PROOF BANNER ===== -->
-  <div class="proof-banner">
-    <code><em>theorem</em> state_transition_correct : ∀ s b, <em>verify</em> (transition s b) = <em>true</em></code>
-  </div>
 
   <!-- ===== WHY VERITY ===== -->
   <section id="why">
