@@ -167,6 +167,19 @@
       text-align: center;
       padding: 4rem 2rem 6rem;
       position: relative;
+      overflow: hidden;
+    }
+
+    .hero-smoke {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero > *:not(.hero-smoke) {
+      position: relative;
+      z-index: 1;
     }
 
 
@@ -182,26 +195,21 @@
       margin-bottom: 2.5rem;
     }
 
-    .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 200;
-      line-height: 1.1;
-      letter-spacing: 0.06em;
-      max-width: 800px;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero h1 .thin {
-      font-weight: 100;
-      opacity: 0.5;
-    }
-
-    .hero p {
-      font-size: clamp(1rem, 2vw, 1.2rem);
-      max-width: 560px;
-      color: var(--fg-muted);
-      line-height: 1.7;
+    .hero-formula {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem 2.5rem;
       margin-bottom: 3rem;
+      max-width: 800px;
+    }
+
+    .hero-formula code {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: clamp(1rem, 2.2vw, 1.35rem);
+      color: var(--fg-muted);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
     }
 
     .hero-buttons {
@@ -783,12 +791,11 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .hero-badge, .hero h1, .hero p, .hero-buttons {
+    .hero-badge, .hero-formula, .hero-buttons {
       animation: fadeInUp 0.8s ease-out both;
     }
-    .hero h1 { animation-delay: 0.1s; }
-    .hero p { animation-delay: 0.2s; }
-    .hero-buttons { animation-delay: 0.3s; }
+    .hero-formula { animation-delay: 0.1s; }
+    .hero-buttons { animation-delay: 0.2s; }
   </style>
 </head>
 <body>
@@ -832,9 +839,11 @@
 
   <!-- ===== HERO ===== -->
   <section class="hero">
+    <canvas class="hero-smoke" id="smokeCanvas"></canvas>
     <div class="hero-badge">Ethereum Lean Consensus Client</div>
-    <h1>Consensus You Can <span class="thin">Mathematically</span> Trust</h1>
-    <p>Verity is the formally verified Ethereum consensus client. Core consensus logic is proven correct in Lean 4 and integrated into a Rust client via FFI — eliminating entire classes of bugs before they happen.</p>
+    <div class="hero-formula">
+      <code>theorem state_transition_correct : ∀ s b, verify (transition s b) = true</code>
+    </div>
     <div class="hero-buttons">
       <a href="#" class="btn btn-primary">
         <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
@@ -1084,7 +1093,90 @@
         const next = current === 'dark' ? 'light' : 'dark';
         root.setAttribute('data-theme', next);
         localStorage.setItem('verity-theme', next);
+        window.dispatchEvent(new Event('theme-changed'));
       });
+    })();
+
+    /* ===== Smoke Effect (Louvre-style) ===== */
+    (function() {
+      const canvas = document.getElementById('smokeCanvas');
+      const ctx = canvas.getContext('2d');
+      let W, H;
+      const particles = [];
+      const PARTICLE_COUNT = 90;
+
+      function resize() {
+        const hero = canvas.parentElement;
+        W = canvas.width = hero.offsetWidth;
+        H = canvas.height = hero.offsetHeight;
+      }
+
+      function isDark() {
+        return document.documentElement.getAttribute('data-theme') !== 'light';
+      }
+
+      class Smoke {
+        constructor() { this.reset(true); }
+        reset(init) {
+          this.x = Math.random() * W;
+          this.y = init ? Math.random() * H : H + 50 + Math.random() * 100;
+          this.r = 60 + Math.random() * 140;
+          this.vx = (Math.random() - 0.5) * 0.3;
+          this.vy = -(0.15 + Math.random() * 0.35);
+          this.life = 0;
+          this.maxLife = 300 + Math.random() * 400;
+          this.opacity = 0;
+          this.maxOpacity = isDark()
+            ? 0.04 + Math.random() * 0.06
+            : 0.07 + Math.random() * 0.09;
+          this.drift = (Math.random() - 0.5) * 0.002;
+        }
+        update() {
+          this.life++;
+          this.x += this.vx;
+          this.y += this.vy;
+          this.vx += this.drift;
+          this.r += 0.15;
+          const p = this.life / this.maxLife;
+          if (p < 0.2) this.opacity = this.maxOpacity * (p / 0.2);
+          else if (p > 0.6) this.opacity = this.maxOpacity * (1 - (p - 0.6) / 0.4);
+          else this.opacity = this.maxOpacity;
+          if (this.life >= this.maxLife || this.y + this.r < -50) this.reset(false);
+        }
+        draw() {
+          const c = isDark() ? 255 : 0;
+          const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
+          grad.addColorStop(0, `rgba(${c},${c},${c},${this.opacity})`);
+          grad.addColorStop(0.5, `rgba(${c},${c},${c},${this.opacity * 0.4})`);
+          grad.addColorStop(1, `rgba(${c},${c},${c},0)`);
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function init() {
+        resize();
+        for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Smoke());
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, W, H);
+        for (const p of particles) { p.update(); p.draw(); }
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener('resize', resize);
+      window.addEventListener('theme-changed', function() {
+        for (const p of particles) {
+          p.maxOpacity = isDark()
+            ? 0.04 + Math.random() * 0.06
+            : 0.07 + Math.random() * 0.09;
+        }
+      });
+      init();
+      animate();
     })();
 
   </script>
