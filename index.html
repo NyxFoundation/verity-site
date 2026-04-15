@@ -364,7 +364,7 @@
     /* ===== Why Verity ===== */
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem;
     }
 
@@ -379,18 +379,6 @@
     .feature-card:hover {
       border-color: var(--fg-hover);
       background: var(--fg-card-hover);
-    }
-
-    .feature-icon {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--fg-hover);
-      border-radius: 10px;
-      margin-bottom: 1.5rem;
-      font-size: 1.1rem;
     }
 
     .feature-card h3 {
@@ -1036,34 +1024,16 @@
 
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon">∀</div>
           <h3>Formally Verified</h3>
-          <p>Core consensus logic is expressed and proven in Lean 4, then called from Rust via FFI. The verified code runs directly — there is no gap between what the spec says and what the code does.</p>
+          <p>Core consensus logic is expressed and proven in Lean 4, then called from Rust via FFI. This eliminates specification drift and proves the absence of entire bug classes at compile time.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">⊢</div>
-          <h3>Spec-Implementation Alignment</h3>
-          <p>Traditional clients reimplement specifications by hand, introducing subtle divergences. Verity's approach makes such drift structurally impossible.</p>
+          <h3>Ecosystem Contribution</h3>
+          <p>Purpose-built for Ethereum's Lean Consensus roadmap. Verity adds a qualitatively different kind of client diversity — one backed by mathematical certainty rather than independent reimplementation.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">◇</div>
-          <h3>Eliminating Bug Classes</h3>
-          <p>Formal verification doesn't just find bugs — it proves their absence. Entire categories of consensus-breaking errors are ruled out at compile time.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">⬡</div>
-          <h3>Lean Consensus Ready</h3>
-          <p>Purpose-built for Ethereum's Lean Consensus roadmap. Verity's architecture is designed from the ground up to align with the protocol's evolving future.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">△</div>
           <h3>Transparent Assurance</h3>
           <p>Every proof is open source and machine-checkable. Anyone can independently verify that Verity's implementation matches the Ethereum specification.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">⊡</div>
-          <h3>Client Diversity</h3>
-          <p>A verified client adds a qualitatively different kind of diversity to the Ethereum ecosystem — one backed by mathematical certainty rather than independent reimplementation.</p>
         </div>
       </div>
     </div>
